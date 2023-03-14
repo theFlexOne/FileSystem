@@ -1,15 +1,24 @@
 package com.flexone.bo;
 
+
+import java.util.List;
+
 public class FileBO extends BaseBO {
-    String fileName;
-    String fileType;
-    long fileSize;
-    String path;
-    Directory fileDir;
+    // region FIELDS
+    private String fileName;
+    private String fileType;
+    private long fileSize;
+    private String path;
+    private Directory fileDir;
+    // endregion
+
+    // region CONSTRUCTORS
     public FileBO() {
         this.fileDir = new Directory();
     }
+    // endregion
 
+    // region GETTERS & SETTERS
     public String getFileName() {
         return fileName;
     }
@@ -54,8 +63,11 @@ public class FileBO extends BaseBO {
         this.fileDir = fileDir;
         return this;
     }
+    // endregion
 
+    // region METHODS
     public String toString() {
         return path;
     }
+    // endregion
 }

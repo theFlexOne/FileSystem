@@ -2,6 +2,7 @@ package com.flexone.dao.mysql;
 
 import org.apache.log4j.Logger;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -38,5 +39,18 @@ public abstract class MySQL {
             logger.info("Connection failed!");
         }
 
+    }
+
+    public static void clearDB() {
+        connect();
+
+        try {
+            String sp = "{call ClearDB()}";
+            CallableStatement cStmt = connection.prepareCall(sp);
+            cStmt.executeQuery();
+
+        } catch (SQLException ex) {
+            logger.error(ex);
+        }
     }
 }

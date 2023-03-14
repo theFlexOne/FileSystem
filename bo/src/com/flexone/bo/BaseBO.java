@@ -1,7 +1,7 @@
 package com.flexone.bo;
 
 public abstract class BaseBO {
-    int id;
+    private int id;
 
     public int getId() {
         return id;

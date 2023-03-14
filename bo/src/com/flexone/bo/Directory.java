@@ -1,11 +1,24 @@
 package com.flexone.bo;
 
-public class Directory extends BaseBO {
-    String dirName;
-    double dirSize;
-    int numberOfFiles;
-    String path;
+import java.util.Arrays;
+import java.util.List;
 
+public class Directory extends BaseBO {
+
+    // region FIELDS
+    private String dirName;
+    private double dirSize;
+    private int numberOfFiles;
+    private String path;
+    private Directory parent;
+    // endregion
+
+    // region CONSTRUCTORS
+    public Directory() {
+    }
+    // endregion
+
+    // region GETTERS & SETTERS
     public String getDirName() {
         return dirName;
     }
@@ -42,7 +55,19 @@ public class Directory extends BaseBO {
         return this;
     }
 
+    public Directory getParent() {
+        return parent;
+    }
+
+    public Directory setParent(Directory parent) {
+        this.parent = parent;
+        return this;
+    }
+    // endregion
+
+    // region METHODS
     public String toString() {
         return path;
     }
+    // endregion
 }
