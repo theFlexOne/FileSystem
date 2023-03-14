@@ -55,14 +55,25 @@ public class Main {
             // Prompt user for an option
             String option = scanner.nextLine();
 
+            if (option.equals("6")) {
+                System.out.println();
+                System.out.println("Goodbye");
+                MySQL.clearDB();
+                return;
+            }
+
             // Execute action based on option entered
             executeOption(option);
 
             System.out.print("Would you like to continue? (y/n) ");
             String input = scanner.nextLine();
 
-            if (input.equalsIgnoreCase("n")) executeOption("6");
-
+            if (input.equalsIgnoreCase("n")) {
+                System.out.println();
+                System.out.println("Goodbye");
+                MySQL.clearDB();
+                return;
+            }
         }
     }
     private static Directory seedFileSystem(String path, int parentId) {
@@ -81,7 +92,9 @@ public class Main {
         dir.setId(dirId);
 
         File[] filesInDir = rootDir.listFiles();
-        for (File f : filesInDir) {
+
+            assert filesInDir != null;
+            for (File f : filesInDir) {
             if (f.isDirectory()) {
                 seedFileSystem(f.getPath(), dirId);
             } else {
@@ -100,9 +113,9 @@ public class Main {
     }
 
     private static void executeOption(String option) {
-        switch(option) {
+        switch (option) {
             // Display directory with most files
-            case "1": {
+            case "1" -> {
                 Directory dir = directoryDAO.getDirWithMostFiles();
                 System.out.println();
                 System.out.println("======================================================");
@@ -112,19 +125,21 @@ public class Main {
                 System.out.println("======================================================");
                 return;
             }
+
             // Display directory largest in size
-            case "2": {
+            case "2" -> {
                 Directory dir = directoryDAO.getDirWithLargestSize();
                 System.out.println();
                 System.out.println("======================================================");
                 System.out.println("Directory Name: " + dir.getDirName());
-                System.out.println("Directory Size (MB): " + (double) dir.getDirSize() / 1000000);
+                System.out.println("Directory Size (MB): " + dir.getDirSize() / 1000000);
                 System.out.println("Path: " + dir.getPath());
                 System.out.println("======================================================");
                 return;
             }
+
             // Display 5 largest files in size
-            case "3": {
+            case "3" -> {
                 List<FileBO> files = fileDAO.getLargestFiles(5);
                 System.out.println();
                 System.out.println("======================================================");
@@ -137,8 +152,9 @@ public class Main {
                 System.out.println("======================================================");
                 return;
             }
+
             // Display all files of a certain type
-            case "4": {
+            case "4" -> {
                 System.out.println("Please enter a file type:");
                 String fileType = scanner.nextLine();
 
@@ -148,13 +164,14 @@ public class Main {
                 System.out.println("======================================================");
                 System.out.println("The following are all the files with a type of '" + fileType + "':");
                 for (int i = 0; i < files.size(); i++) {
-                    System.out.println("    " + (i+1) + ") File Name: " + files.get(i).getFileName() + " | Path: " + files.get(i).getPath());
+                    System.out.println("    " + (i + 1) + ") File Name: " + files.get(i).getFileName() + " | Path: " + files.get(i).getPath());
                 }
                 System.out.println("======================================================");
                 return;
             }
+
             // Clear the DB and start over
-            case "5": {
+            case "5" -> {
                 System.out.println();
                 System.out.println("Starting over");
                 MySQL.clearDB();
@@ -162,16 +179,11 @@ public class Main {
                 return;
 
             }
-            case "6": {
-                System.out.println();
-                System.out.println("Goodbye");
-                MySQL.clearDB();
-                Main.isOpen = false;
-            }
-            default: {
-                logger.error("WTF?");
+            default -> {
+                System.out.println("WTF?");
             }
         }
+
     }
 
 
