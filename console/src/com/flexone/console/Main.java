@@ -17,11 +17,12 @@ public class Main {
 
     private static boolean isOpen = false;
 
-    public static Logger logger = Logger.getLogger(Main.class);
-    public static Scanner scanner = new Scanner(System.in);
+    final static Logger logger = Logger.getLogger(Main.class);
+    final static Scanner scanner = new Scanner(System.in);
 
-    public static DirectoryDAO directoryDAO = new DirectoryDAOImpl();
-    public static FileDAO fileDAO = new FileDAOImpl();
+    final static DirectoryDAO directoryDAO = new DirectoryDAOImpl();
+    final static FileDAO fileDAO = new FileDAOImpl();
+
     public static void main(String[] args) {
         init();
     }
@@ -51,6 +52,7 @@ public class Main {
             System.out.println("    5  -  Clear the db and start over");
             System.out.println("    6  -  Exit");
             System.out.println("======================================================");
+            System.out.print("Choose an option: ");
 
             // Prompt user for an option
             String option = scanner.nextLine();
@@ -65,6 +67,7 @@ public class Main {
             // Execute action based on option entered
             executeOption(option);
 
+            System.out.println();
             System.out.print("Would you like to continue? (y/n) ");
             String input = scanner.nextLine();
 
@@ -76,10 +79,11 @@ public class Main {
             }
         }
     }
+
     private static Directory seedFileSystem(String path, int parentId) {
         File rootDir = new File(path);
         DirectoryDAO directoryDAO = new DirectoryDAOImpl();
-        FileDAOImpl fileDAO = new FileDAOImpl();
+        FileDAO fileDAO = new FileDAOImpl();
 
         Directory dir = new Directory();
         dir.setDirName(rootDir.getName());
@@ -93,8 +97,8 @@ public class Main {
 
         File[] filesInDir = rootDir.listFiles();
 
-            assert filesInDir != null;
-            for (File f : filesInDir) {
+        assert filesInDir != null;
+        for (File f : filesInDir) {
             if (f.isDirectory()) {
                 seedFileSystem(f.getPath(), dirId);
             } else {
@@ -102,6 +106,7 @@ public class Main {
                 file.setFileDir(dir);
                 file.setFileName(f.getName());
                 String fileType = file.getFileName().substring(file.getFileName().lastIndexOf(".") + 1);
+                if (fileType.equals(file.getFileName())) fileType = "File";
                 file.setFileType(fileType);
                 file.setPath(f.getPath());
                 file.setFileSize(f.length());
@@ -144,18 +149,18 @@ public class Main {
                 System.out.println();
                 System.out.println("======================================================");
                 System.out.println("The 5 largest files, in order, are:");
-                System.out.println("    1) File Name: " + files.get(0).getFileName() + " | Size: " + files.get(0).getFileSize());
-                System.out.println("    2) File Name: " + files.get(1).getFileName() + " | Size: " + files.get(1).getFileSize());
-                System.out.println("    3) File Name: " + files.get(2).getFileName() + " | Size: " + files.get(2).getFileSize());
-                System.out.println("    4) File Name: " + files.get(3).getFileName() + " | Size: " + files.get(3).getFileSize());
-                System.out.println("    5) File Name: " + files.get(4).getFileName() + " | Size: " + files.get(4).getFileSize());
+                System.out.println("    1) File Name: " + files.get(0).getFileName() + " | Size (MB): " + (double) files.get(0).getFileSize() / 1000000);
+                System.out.println("    2) File Name: " + files.get(1).getFileName() + " | Size (MB): " + (double) files.get(1).getFileSize() / 1000000);
+                System.out.println("    3) File Name: " + files.get(2).getFileName() + " | Size (MB): " + (double) files.get(2).getFileSize() / 1000000);
+                System.out.println("    4) File Name: " + files.get(3).getFileName() + " | Size (MB): " + (double) files.get(3).getFileSize() / 1000000);
+                System.out.println("    5) File Name: " + files.get(4).getFileName() + " | Size (MB): " + (double) files.get(4).getFileSize() / 1000000);
                 System.out.println("======================================================");
                 return;
             }
 
             // Display all files of a certain type
             case "4" -> {
-                System.out.println("Please enter a file type:");
+                System.out.print("Please enter a file type: ");
                 String fileType = scanner.nextLine();
 
                 List<FileBO> files = fileDAO.getFilesOfType(fileType);
@@ -179,62 +184,7 @@ public class Main {
                 return;
 
             }
-            default -> {
-                System.out.println("WTF?");
-            }
+            default -> System.out.println("WTF?");
         }
-
     }
-
-
-//    private static void start() {
-//        DirectoryDAO directoryDao = new DirectoryDAOImpl();
-//        List<Directory> directoryList = directoryDao.getDirectoryList();
-//
-//        System.out.println("=======================================");
-//        for (Directory dir : directoryList) {
-//            System.out.println(dir.getId() + ") " + dir.getDirName());
-//        }
-//        System.out.println("=======================================");
-//
-//        Scanner scanner = new Scanner(System.in);
-//        System.out.println("Please choose a Directory Name to start from:");
-//        String dirId = scanner.nextLine();
-//
-//        Directory directory = directoryDao.getDirectoryById(Integer.parseInt(dirId));
-//
-//        System.out.println("------- DIRECTORY FILES --------");
-//        System.out.println("Full Name: " + personDetail.getFirstName() + " " + personDetail.getLastName());
-//        System.out.println("DOB: " + personDetail.getBirthDate());
-//        System.out.println("SSN: " + personDetail.getSSN());
-//        System.out.println("-------------------------------");
-//
-//    }
 }
-
-//        // region CREATE MENU
-//        PersonDAO personDAO = new PersonDAOImpl();
-//        List<Person> personList = personDAO.getPersonList();
-//
-//        System.out.println("=======================================");
-//        for (Person p : personList) {
-//            System.out.println(p.getPersonId() + ") " + p.getLastName() + ", " + p.getFirstName());
-//        }
-//        System.out.println("=======================================");
-//        // endregion
-//
-//        // region PROMPT USER
-//        Scanner scanner = new Scanner(System.in);
-//        System.out.println("Please select a person from list: ");
-//        String personId = scanner.nextLine();
-//        // endregion
-//
-//        // region GET PERSON DETAILS
-//        Person personDetail = personDAO.getPersonById(Integer.parseInt(personId));
-//
-//        System.out.println("------- PERSON DETAILS --------");
-//        System.out.println("Full Name: " + personDetail.getFirstName() + " " + personDetail.getLastName());
-//        System.out.println("DOB: " + personDetail.getBirthDate());
-//        System.out.println("SSN: " + personDetail.getSSN());
-//        System.out.println("-------------------------------");
-//        // endregion
